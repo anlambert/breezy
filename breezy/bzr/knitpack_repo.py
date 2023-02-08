@@ -141,8 +141,10 @@ class KnitPackRepository(PackRepository, KnitRepository):
         packer = KnitReconcilePacker(collection, packs, extension, revs)
         return packer.pack(pb)
 
+class RepositoryFormatKnitPack(RepositoryFormatPack):
+    upgrade_recommended = True
 
-class RepositoryFormatKnitPack1(RepositoryFormatPack):
+class RepositoryFormatKnitPack1(RepositoryFormatKnitPack):
     """A no-subtrees parameterized Pack repository.
 
     This format was introduced in 0.92.
@@ -177,7 +179,7 @@ class RepositoryFormatKnitPack1(RepositoryFormatPack):
         return "Packs containing knits without subtree support"
 
 
-class RepositoryFormatKnitPack3(RepositoryFormatPack):
+class RepositoryFormatKnitPack3(RepositoryFormatKnitPack):
     """A subtrees parameterized Pack repository.
 
     This repository format uses the xml7 serializer to get:
@@ -220,7 +222,7 @@ class RepositoryFormatKnitPack3(RepositoryFormatPack):
         return "Packs containing knits with subtree support\n"
 
 
-class RepositoryFormatKnitPack4(RepositoryFormatPack):
+class RepositoryFormatKnitPack4(RepositoryFormatKnitPack):
     """A rich-root, no subtrees parameterized Pack repository.
 
     This repository format uses the xml6 serializer to get:
@@ -262,7 +264,7 @@ class RepositoryFormatKnitPack4(RepositoryFormatPack):
         return "Packs containing knits with rich root support\n"
 
 
-class RepositoryFormatKnitPack5(RepositoryFormatPack):
+class RepositoryFormatKnitPack5(RepositoryFormatKnitPack):
     """Repository that supports external references to allow stacking.
 
     Supports external lookups, which results in non-truncated ghosts after
@@ -299,7 +301,7 @@ class RepositoryFormatKnitPack5(RepositoryFormatPack):
         return "Packs 5 (adds stacking support, requires bzr 1.6)"
 
 
-class RepositoryFormatKnitPack5RichRoot(RepositoryFormatPack):
+class RepositoryFormatKnitPack5RichRoot(RepositoryFormatKnitPack):
     """A repository with rich roots and stacking.
 
     Supports stacking on other repositories, allowing data to be accessed
@@ -338,7 +340,7 @@ class RepositoryFormatKnitPack5RichRoot(RepositoryFormatPack):
         return "Packs 5 rich-root (adds stacking support, requires bzr 1.6.1)"
 
 
-class RepositoryFormatKnitPack5RichRootBroken(RepositoryFormatPack):
+class RepositoryFormatKnitPack5RichRootBroken(RepositoryFormatKnitPack):
     """A repository with rich roots and external references.
 
     Supports external lookups, which results in non-truncated ghosts after
@@ -388,7 +390,7 @@ class RepositoryFormatKnitPack5RichRootBroken(RepositoryFormatPack):
         return True
 
 
-class RepositoryFormatKnitPack6(RepositoryFormatPack):
+class RepositoryFormatKnitPack6(RepositoryFormatKnitPack):
     """A repository with stacking and btree indexes,
     without rich roots or subtrees.
 
@@ -425,7 +427,7 @@ class RepositoryFormatKnitPack6(RepositoryFormatPack):
         return "Packs 6 (uses btree indexes, requires bzr 1.9)"
 
 
-class RepositoryFormatKnitPack6RichRoot(RepositoryFormatPack):
+class RepositoryFormatKnitPack6RichRoot(RepositoryFormatKnitPack):
     """A repository with rich roots, no subtrees, stacking and btree indexes.
 
     1.6-rich-root with B+Tree indices.
@@ -463,7 +465,7 @@ class RepositoryFormatKnitPack6RichRoot(RepositoryFormatPack):
         return "Packs 6 rich-root (uses btree indexes, requires bzr 1.9)"
 
 
-class RepositoryFormatPackDevelopment2Subtree(RepositoryFormatPack):
+class RepositoryFormatPackDevelopment2Subtree(RepositoryFormatKnitPack):
     """A subtrees development repository.
 
     This format should be retained in 2.3, to provide an upgrade path from this

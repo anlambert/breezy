@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 """Black box tests for the upgrade ui."""
+import inspect
 import os
 import stat
 
@@ -32,8 +33,10 @@ from breezy.tests import (
     features,
     TestCaseWithTransport,
     )
+from breezy.bzr import knitpack_repo
+from breezy.bzr.pack_repo import RepositoryFormatPack
 from breezy.tests.test_sftp_transport import TestCaseWithSFTPServer
-from breezy.bzr.knitpack_repo import RepositoryFormatKnitPack1
+
 
 
 class OldBzrDir(bzrdir.BzrDirMeta1):
@@ -186,7 +189,7 @@ finished
         self.assertTrue(isinstance(converted_dir._format,
                                    bzrdir.BzrDirMetaFormat1))
         self.assertTrue(isinstance(converted_dir.open_repository()._format,
-                                   RepositoryFormatKnitPack1))
+                                   knitpack_repo.RepositoryFormatKnitPack1))
 
     def test_upgrade_repo(self):
         self.run_bzr('init-shared-repository --format=pack-0.92 repo')
@@ -299,3 +302,23 @@ class UpgradeRecommendedTests(TestCaseWithTransport):
         branch = self.make_branch_and_tree('repo/branch', format="pack-0.92")
         self.get_transport('repo/branch/.bzr/repository').delete_tree('.')
         out, err = self.run_bzr(['upgrade'], working_dir='repo/branch')
+
+    def test_knitpack_repo_upgrade_recommended(self):
+        def inherits_repository_format_pack_class(obj):
+            return (
+                inspect.isclass(obj)
+                and obj != RepositoryFormatPack
+                and issubclass(obj, RepositoryFormatPack)
+            )
+
+        repository_format_classes = [
+            obj
+            for _, obj in inspect.getmembers(
+                knitpack_repo, inherits_repository_format_pack_class
+            )
+        ]
+
+        self.assertTrue(repository_format_classes)
+
+        for obj in repository_format_classes:
+            self.assertTrue(obj.upgrade_recommended)
